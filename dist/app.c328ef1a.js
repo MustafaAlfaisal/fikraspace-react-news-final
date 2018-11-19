@@ -27772,7 +27772,7 @@ function _templateObject2() {
 }
 
 function _templateObject() {
-  var data = _taggedTemplateLiteral(["\n  border-radius: 20px;\n  background-color: #000;\n  color: #fff;\n  font-size: 1.2rem;\n  border: 0px;\n  height: 40px;\n"]);
+  var data = _taggedTemplateLiteral(["\n  border-radius: 20px;\n  background-color: #000;\n  color: #fff;\n  font-size: 1.2rem;\n  border: 0px;\n  height: 40px;\n  outline: none;\n  padding: 0 10px;\n"]);
 
   _templateObject = function _templateObject() {
     return data;
@@ -27807,28 +27807,61 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(News).call(this));
     _this.state = {
-      news: []
+      news: [],
+      searchValue: ''
     };
-    fetch('https://newsapi.org/v2/everything?q=bitcoin&apiKey=978d6c3818ff431b8c210ae86550fb1f').then(function (response) {
-      return response.json();
-    }).then(function (data) {
-      _this.setState({
-        news: data.articles
-      });
-    });
+
+    _this.getNews();
+
     return _this;
   }
 
   _createClass(News, [{
+    key: "getNews",
+    value: function getNews() {
+      var _this2 = this;
+
+      var searchTerm = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Iraq';
+      fetch("https://newsapi.org/v2/everything?q=".concat(searchTerm, "&apiKey=978d6c3818ff431b8c210ae86550fb1f")).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        _this2.setState({
+          news: data.articles
+        });
+      });
+    }
+  }, {
+    key: "onInputChange",
+    value: function onInputChange(event) {
+      this.setState({
+        searchValue: event.target.value
+      });
+    }
+  }, {
+    key: "onKeyUp",
+    value: function onKeyUp(event) {
+      if (event.key == 'Enter') {
+        this.getNews(this.state.searchValue);
+        this.setState({
+          searchValue: ''
+        });
+      }
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react.default.createElement(_react.default.Fragment, null, _react.default.createElement(Navigation, null, _react.default.createElement("img", {
         width: "150px;",
         src: require('./assets/logo.svg')
       }), _react.default.createElement(SearchBox, {
+        onChange: this.onInputChange.bind(this),
+        onKeyUp: this.onKeyUp.bind(this),
+        value: this.state.searchValue,
         placeholder: "search term"
       })), _react.default.createElement(NewsContainer, null, this.state.news.map(function (item, i) {
-        return _react.default.createElement(NewsItem, null, _react.default.createElement("img", {
+        return _react.default.createElement(NewsItem, {
+          key: i
+        }, _react.default.createElement("img", {
           width: "124px;",
           height: "124px",
           src: item.urlToImage
@@ -27872,7 +27905,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49472" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49764" + '/');
 
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);

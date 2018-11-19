@@ -12,6 +12,8 @@ let SearchBox = styled.input `
   font-size: 1.2rem;
   border: 0px;
   height: 40px;
+  outline: none;
+  padding: 0 10px;
 `
 let Navigation = styled.header `
   display: flex;
@@ -56,10 +58,16 @@ class News extends Component{
     super()
   
     this.state = {
-      news: []
+      news: [],
+      searchValue: ''
     }
 
-    fetch('https://newsapi.org/v2/everything?q=bitcoin&apiKey=978d6c3818ff431b8c210ae86550fb1f')
+    this.getNews()
+
+  }
+
+  getNews(searchTerm = 'Iraq') {
+    fetch(`https://newsapi.org/v2/everything?q=${searchTerm}&apiKey=978d6c3818ff431b8c210ae86550fb1f`)
     .then((response)=>{
       return response.json()
     })
@@ -70,19 +78,36 @@ class News extends Component{
     })
   }
 
+  onInputChange(event){
+    this.setState({
+      searchValue: event.target.value
+    })
+  } 
+
+  onKeyUp(event){
+    if(event.key == 'Enter'){
+      this.getNews(this.state.searchValue)
+      this.setState({
+        searchValue: ''
+      })
+    }
+  }
 
   render() {
     return (
       <React.Fragment>
         <Navigation>
           <img width="150px;" src={require('./assets/logo.svg')}/>
-          <SearchBox placeholder="search term"/>
+          <SearchBox 
+          onChange={this.onInputChange.bind(this)} 
+          onKeyUp={this.onKeyUp.bind(this)}
+          value={this.state.searchValue} placeholder="search term"/>
         </Navigation>
         <NewsContainer>
           {
             this.state.news.map((item, i)=>{
               return (
-              <NewsItem>
+              <NewsItem key={i}>
                   <img width="124px;" height="124px" src={item.urlToImage} />
                 <NewsText>
                   <h1>{item.title}</h1>
